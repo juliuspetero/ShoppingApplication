@@ -1,0 +1,31 @@
+<div class="row justify-content-center m-3">
+  <div class="col-sm-8">
+    <div class="card">
+      <div class="card-header text-center">
+        <h3>{{ product.name }}</h3>
+        <h4>UGX {{ product.price }}</h4>
+      </div>
+      <div class="card-body text-center">
+        <!-- Display this error messages here -->
+        <div *ngIf="statusMessage" class="text-success">
+          {{ statusMessage }}
+        </div>
+        <div *ngIf="errorMessage" class="text-danger">
+          {{ errorMessage }}
+        </div>
+        <img class="image-thumbnail" src="assets/images/Redsox.jpg" />
+
+        <h4>Product Description</h4>
+        <small>{{ product.description }}</small>
+      </div>
+      <div class="card-footer text-center">
+        <a routerLink="/" class="btn btn-primary mr-4">Back</a>
+
+        <!-- When this button is clicked, the product, appropriate method is called to add a product to a cart -->
+        <button class="btn btn-primary" (click)="OnAddToCart(product)">
+          Add to Cart <i class="fa fa-shopping-cart"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+<div class="card-body mt-0" *ngIf="transactions">
+  <h3>All Transactions</h3>
+  <table class="table table-bordered table-responsive text-center">
+    <thead class="thead-light">
+      <tr>
+        <th>ID</th>
+        <th>User ID</th>
+        <th>User Email</th>
+        <th>Request ID</th>
+        <th>Created On</th>
+        <th>Status</th>
+        <th>Amount</th>
+        <th>Payment Provider</th>
+        <th>Order ID</th>
+        <th>Update Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let transaction of transactions">
+        <td>{{ transaction.id }}</td>
+        <td>{{ transaction.userId }}</td>
+        <td>{{ transaction.userEmail }}</td>
+        <td>{{ transaction.requestId }}</td>
+        <td>{{ transaction.createdOn | date: "short" }}</td>
+        <td>{{ transaction.status }}</td>
+        <td>{{ transaction.amount | currency: "UGX " }}</td>
+        <td>{{ transaction.paymentProvider }}</td>
+        <td>{{ transaction.orderId }}</td>
+        <th>
+          <button
+            (click)="getTransactionDetails(transaction.id)"
+            class="btn btn-primary"
+          >
+            Refresh
+          </button>
+        </th>
+      </tr>
+    </tbody>
+  </table>
+  <a [routerLink]="'dashboard'" class="btn btn-primary m-1"
+    >BACK TO DASHBOARD</a
+  >
+</div>
+
+<!-- In case error occur during data retrieval from the API -->
+<div class="text-danger" *ngIf="errorMessage">
+  {{ errorMessage }}
+</div>

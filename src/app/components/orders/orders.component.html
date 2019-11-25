@@ -1,0 +1,116 @@
+<div class="card-body mt-0" *ngIf="userOrders">
+  <h3>All Orders</h3>
+  <table class="table table-bordered table-responsive text-center">
+    <thead class="thead-light">
+      <tr>
+        <th>Order ID</th>
+        <th>Date of Placement</th>
+        <th>Total Amount Paid</th>
+        <th>Payment Mode</th>
+        <th>Products Ordered</th>
+        <th>Delivery Status</th>
+        <th>Payment Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of userOrders">
+        <td>{{ order.id }}</td>
+        <td>{{ order.placedOn | date: "short" }}</td>
+        <td>{{ order.totalAmount | currency: "UGX " }}</td>
+        <td>{{ order.paymentMode | titlecase }}</td>
+        <td class="products">
+          <table class="table table-bordered table-responsive">
+            <thead class="thead-light">
+              <tr>
+                <th>Name</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let product of order.oderProducts">
+                <td>{{ product.name }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>
+                  {{ product.price * product.quantity | currency: "UGX " }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <!-- <td>{{ order.oderProducts | json }}</td> -->
+        <td>{{ order.deliveryStatus }}</td>
+        <td>
+          <!-- PROCESSING -->
+          <ng-template
+            [ngIf]="order.paymentStatus.toLowerCase() == 'processing'"
+            [ngIfElse]="committed"
+          >
+            <div class="text-info">
+              Your payment is being processed, please wait!
+            </div>
+          </ng-template>
+
+          <!-- COMMITED -->
+          <ng-template #committed>
+            <ng-template
+              [ngIf]="order.paymentStatus.toLowerCase() == 'committed'"
+              [ngIfElse]="failed"
+            >
+              <div class="text-info">
+                Your payment has been successfull received!
+              </div>
+            </ng-template>
+          </ng-template>
+
+          <!-- FAILED -->
+          <ng-template #failed>
+            <ng-template
+              [ngIf]="order.paymentStatus.toLowerCase() == 'failed'"
+              [ngIfElse]="anonymous"
+            >
+              <div class="text-info">
+                Your payment has failed, please try again!
+              </div>
+            </ng-template>
+          </ng-template>
+
+          <!-- ANONYMOUS -->
+          <ng-template #anonymous>
+            <div class="text-info">
+              {{ order.paymentStatus }}
+            </div>
+          </ng-template>
+
+          <br />
+          <button
+            (click)="updatePaymentStatus(order.id)"
+            class="btn btn-outline-dark"
+          >
+            Refresh
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <a routerLink="/products" class="btn btn-primary m-1">CONTINUE SHOPPING</a>
+</div>
+
+<!-- In case there is no product -->
+<div
+  *ngIf="!userOrders || userOrders.length == 0"
+  class="text-info mt-4 text-center"
+>
+  <h5>You have placed no orders yet!</h5>
+  <p>
+    All your orders will be saved here for you to access their state anytime.
+  </p>
+  <a class="btn btn-outline-dark" routerLink="/products">GO TO SHOPPING LIST</a>
+</div>
+
+<!-- In case error occur during data retrieval from the API -->
+<div class="text-danger" *ngIf="errorMessage">
+  {{ errorMessage }}
+</div>

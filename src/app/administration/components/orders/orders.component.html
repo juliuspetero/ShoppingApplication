@@ -1,0 +1,71 @@
+<div class="card-body mt-0" *ngIf="orders">
+  <h3>All Orders</h3>
+  <table class="table table-bordered table-responsive text-center">
+    <thead class="thead-light">
+      <tr>
+        <th>Order ID</th>
+        <th>Date of Placement</th>
+        <th>Total Amount Paid</th>
+        <th>Application Mode</th>
+        <th>Products Ordered</th>
+        <th>Delivery Status</th>
+        <th>Payment Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let order of orders">
+        <td>{{ order.id }}</td>
+        <td>{{ order.placedOn | date: "short" }}</td>
+        <td>{{ order.totalAmount | currency: "UGX " }}</td>
+        <td>{{ order.applicationMode | titlecase }}</td>
+        <td class="products">
+          <table class="table table-bordered table-responsive">
+            <thead class="thead-light">
+              <tr>
+                <th>Name</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let product of order.orderProducts">
+                <td>{{ product.name }}</td>
+                <td>{{ product.price | currency: "UGX " }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>
+                  {{ product.price * product.quantity | currency: "UGX " }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td>{{ order.deliveryStatus }}</td>
+        <td>
+          {{ order.paymentStatus }}
+          <button
+            (click)="refreshPaymentStatus(order.id)"
+            class="btn btn-outline-dark"
+          >
+            Refresh
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <a routerLink="/administration" class="btn btn-primary m-1"
+    >BACK TO DASHBOARD</a
+  >
+</div>
+
+<!-- In case there is no product -->
+<div *ngIf="!orders || orders.length == 0" class="text-info mt-4 text-center">
+  <h5>No one has placed order yet!</h5>
+
+  <a class="btn btn-outline-dark" routerLink="/products">BACK TO DASHBOARD</a>
+</div>
+
+<!-- In case error occur during data retrieval from the API -->
+<div class="text-danger" *ngIf="errorMessage">
+  {{ errorMessage }}
+</div>

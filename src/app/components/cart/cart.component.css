@@ -1,0 +1,12 @@
+.image {
+  width: 150px;
+  height: auto;
+}
+
+.btn-delete {
+  all: unset;
+}
+
+#cart {
+  margin-top: 75px;
+}

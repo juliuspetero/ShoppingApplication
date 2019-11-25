@@ -1,0 +1,43 @@
+<div class="card-body mt-0" *ngIf="accountDetails">
+  <h3>Account Details</h3>
+  <table class="table table-bordered table-responsive text-center">
+    <thead class="thead-light">
+      <tr>
+        <th>ID</th>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Balance</th>
+        <th>Created On</th>
+        <th>Modified On</th>
+        <th>Short Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ accountDetails.accountId }}</td>
+        <td>{{ accountDetails.accountType }}</td>
+        <td>{{ accountDetails.name }}</td>
+        <td>{{ accountDetails.accountStatus | titlecase }}</td>
+        <td>{{ accountDetails.balance | currency: "UGX " }}</td>
+        <td>{{ accountDetails.createdOn | date: "short" }}</td>
+        <td>{{ accountDetails.modifiedOn | date: "short" }}</td>
+        <td>{{ accountDetails.shortDescription }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <a routerLink="/administration" class="btn btn-primary m-1"
+    >BACK TO DASHBOARD</a
+  >
+  <button
+    (click)="updateAccountDetails(accountDetails.id)"
+    class="btn btn-primary"
+  >
+    Update Account Details
+  </button>
+</div>
+
+<!-- In case error occur during data retrieval from the API -->
+<div class="text-danger" *ngIf="errorMessage">
+  {{ errorMessage }}
+</div>

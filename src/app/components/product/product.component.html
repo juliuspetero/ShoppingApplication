@@ -1,0 +1,28 @@
+<div class="row container-fluid" id="catalog">
+  <div class="col-md-4 mb-3" *ngFor="let product of products">
+    <div class="card text-center">
+      <div class="card-body">
+        <div class="card-title">
+          <h3>{{ product.name }}</h3>
+          <h4>UGX {{ product.price }}</h4>
+        </div>
+        <img class="card-img-top" src="assets/images/Redsox.jpg" />
+      </div>
+      <div class="card-footer text-muted">
+        <a [routerLink]="['/details', product.id]" class="btn btn-primary m-1"
+          >View</a
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- In case there is no product -->
+  <div *ngIf="products.length == 0">
+    <p>There is no product to display</p>
+  </div>
+
+  <!-- In case error occur during data retrieval from the API -->
+  <div class="text-danger" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+</div>

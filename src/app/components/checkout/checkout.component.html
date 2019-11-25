@@ -1,0 +1,207 @@
+<div class="container-fluid" id="checkout">
+  <div class="row" *ngIf="!errorMessage">
+    <!-- Display the current state of the cart -->
+    <div class="col-md-6 pt-5 h6 header ">
+      <div class="row text-center">
+        <div class="col-md-3 float-left">ITEM</div>
+        <div class="col-md-3">QUANTITY</div>
+        <div class="col-md-3">UNIT PRICE</div>
+        <div class="col-md-3">SUBTOTAL</div>
+      </div>
+
+      <!-- Loop through all the items stored in the cart -->
+      <div class="row text-center" *ngFor="let product of productsAddedToCart">
+        <div class="col-md-3 float-left">
+          {{ product.name }}
+          <img
+            class="image-thumbnail image img-fluid mb-3"
+            src="assets/images/Redsox.jpg"
+          />
+        </div>
+        <div class="col-md-3">{{ product.quantity }}</div>
+        <div class="col-md-3">UGX {{ product.price }}</div>
+        <div class="col-md-3">UGX {{ product.price * product.quantity }}</div>
+      </div>
+
+      <div class="row text-center">
+        <div class="col-md-3 "></div>
+        <div class="col-md-3"></div>
+        <div class="col-md-3">Total:</div>
+        <div class="col-md-3">UGX {{ totalCost }}</div>
+      </div>
+    </div>
+    <div class="row pt-1 col-md-6 mb-3" id="checkout">
+      <div class="col-md-8 mx-auto">
+        <div class="card rounded">
+          <div class="card-header">
+            <h3 class="mb-0">Checkout</h3>
+          </div>
+          <div class="card-body">
+            <!-- Registration form -->
+            <form
+              class="form"
+              #checkoutForm="ngForm"
+              (ngSubmit)="checkout(orderRequest)"
+            >
+              <!-- Store cart details here -->
+
+              <!-- Emmail Address field -->
+              <div
+                class="form-group"
+                [class.text-danger]="
+                  emailControl.invalid && emailControl.touched
+                "
+                [class.text-success]="emailControl.valid"
+              >
+                <label for="email" class="col-form-label">Email</label>
+                <input
+                  [(ngModel)]="orderRequest.email"
+                  type="email"
+                  name="email"
+                  class="form-control rounded-0"
+                  [class.is-invalid]="
+                    emailControl.invalid && emailControl.touched
+                  "
+                  [class.is-valid]="emailControl.valid"
+                  required
+                  #emailControl="ngModel"
+                />
+                <span
+                  class="form-text"
+                  *ngIf="emailControl.invalid && emailControl.touched"
+                >
+                  Valid email is required
+                </span>
+              </div>
+
+              <!-- Phone number field -->
+              <div
+                class="form-group"
+                [class.text-danger]="
+                  phoneControl.invalid && phoneControl.touched
+                "
+                [class.text-success]="phoneControl.valid"
+              >
+                <label for="phone" class="col-form-label">Phone Number</label>
+                <input
+                  [(ngModel)]="orderRequest.phone"
+                  type="phone"
+                  name="phone"
+                  class="form-control rounded-0"
+                  [class.is-invalid]="
+                    phoneControl.invalid && phoneControl.touched
+                  "
+                  [class.is-valid]="phoneControl.valid"
+                  required
+                  #phoneControl="ngModel"
+                />
+                <span
+                  class="form-text"
+                  *ngIf="phoneControl.invalid && phoneControl.touched"
+                >
+                  Phone number is required
+                </span>
+              </div>
+
+              <!-- Application Mode -->
+              <div class="form-group">
+                <label
+                  title="Use production for life payment and sandbox for testing"
+                  for="applicationMode"
+                  >Application Mode</label
+                >
+                <select
+                  name="applicationtMode"
+                  id="applicationtMode"
+                  class="form-control"
+                  [(ngModel)]="orderRequest.applicationMode"
+                >
+                  <option value="production" selected>Production</option>
+                  <option value="sandbox">Sandbox</option>
+                </select>
+              </div>
+
+              <!-- Delivery address -->
+              <div
+                class="form-group"
+                [class.text-danger]="
+                  deliveryAddressControl.invalid &&
+                  deliveryAddressControl.touched
+                "
+                [class.text-success]="deliveryAddressControl.valid"
+              >
+                <label for="deliveryAddress" class="col-form-label"
+                  >Delivery Address</label
+                >
+                <input
+                  [(ngModel)]="orderRequest.deliveryAddress"
+                  type="deliveryAddress"
+                  name="deliveryAddress"
+                  class="form-control rounded-0"
+                  [class.is-invalid]="
+                    deliveryAddressControl.invalid &&
+                    deliveryAddressControl.touched
+                  "
+                  [class.is-valid]="deliveryAddressControl.valid"
+                  required
+                  #deliveryAddressControl="ngModel"
+                />
+                <span
+                  class="form-text"
+                  *ngIf="
+                    deliveryAddressControl.invalid &&
+                    deliveryAddressControl.touched
+                  "
+                >
+                  Delivery Address is required
+                </span>
+              </div>
+
+              <!-- Phone number field -->
+              <div
+                class="form-group"
+                [class.text-danger]="
+                  totalAmountControl.invalid && totalAmountControl.touched
+                "
+                [class.text-success]="totalAmountControl.valid"
+              >
+                <label for="totalAmount" class="col-form-label"
+                  >Total Amount To Pay</label
+                >
+                <input
+                  disabled
+                  [(ngModel)]="totalCost"
+                  type="number "
+                  name="totalAmount"
+                  class="form-control rounded-0"
+                  [class.is-invalid]="
+                    totalAmountControl.invalid && totalAmountControl.touched
+                  "
+                  [class.is-valid]="totalAmountControl.valid"
+                  required
+                  #totalAmountControl="ngModel"
+                />
+              </div>
+
+              <button
+                type="submit"
+                class="btn btn-primary float-right"
+                [disabled]="checkoutForm.invalid"
+              >
+                Confirm Payment
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="errorMessage || statusMessage" class="text-info pt-3">
+    {{ errorMessage }}
+    {{ statusMessage }}
+    <br />
+    <a class="btn btn-outline-dark mt-3" routerLink="/products"
+      >CONTINUE SHOPPING</a
+    >
+  </div>
+</div>

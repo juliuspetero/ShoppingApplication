@@ -1,0 +1,73 @@
+<div class="container-fluid mx-2" id="cart">
+  <div *ngIf="productsAddedToCart && productsAddedToCart.length > 0">
+    <div class="header row mt-2 mb-4 h3">
+      <div class="col-md-6 float-left">ITEM</div>
+      <div class="col-md-2">QUANTITY</div>
+      <div class="col-md-2">UNIT PRICE</div>
+      <div class="col-md-2">SUBTOTAL</div>
+    </div>
+
+    <div *ngFor="let product of productsAddedToCart" class="row text-center">
+      <div class="col-md-6 row">
+        <img
+          class="col-md-5"
+          class="image-thumbnail image img-fluid mb-3"
+          src="assets/images/Redsox.jpg"
+        />
+        <div class="col-md-4">
+          <h3 class="title">{{ product.name }}</h3>
+          <p>
+            <small>{{ product.description }}</small>
+          </p>
+        </div>
+        <div class="col-md-3 mt-3 ml-0">
+          <button
+            (click)="removeFromCart(product)"
+            class="btn-delete text-danger"
+          >
+            <i
+              class="fa fa-trash"
+              title="Remove this product from the from your cart"
+            >
+            </i>
+            Remove From Cart
+          </button>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <button (click)="onAddQuantity(product)" class="btn btn-success">
+          +
+        </button>
+        <div>{{ product.quantity }}</div>
+        <button (click)="onRemoveQuantity(product)" class="btn btn-danger">
+          -
+        </button>
+      </div>
+      <div class="col-md-2">{{ product.price }}</div>
+      <div class="col-md-2">{{ product.price * product.quantity }}</div>
+    </div>
+    <!-- Set the total section to the right -->
+    <div class="row mt-4 text-center">
+      <div class="col-md-4">
+        <a class="btn btn-outline-dark" routerLink="/products"
+          >CONTINUE SHOPPING</a
+        >
+      </div>
+      <div class="col-md-4">
+        <button routerLink="/checkout" class="btn btn-outline-dark">
+          PROCEED TO CHECKOUT
+        </button>
+      </div>
+      <div class="col-md-2 mt-0 mr-0">TOTAL</div>
+      <div class="col-md-2 mt-0">UGX {{ totalCost }}</div>
+    </div>
+  </div>
+
+  <div
+    *ngIf="!productsAddedToCart || productsAddedToCart.length == 0"
+    class="text-info mt-4 text-center"
+  >
+    <p>You have not added any product to your cart yet</p>
+    <a class="btn btn-outline-dark" routerLink="/products">CONTINUE SHOPPING</a>
+  </div>
+</div>

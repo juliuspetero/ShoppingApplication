@@ -1,0 +1,139 @@
+<div class="row">
+  <div class="col-md-6 mx-auto">
+    <div class="card rounded">
+      <div class="card-header">
+        <h3 class="mb-0">Create Product</h3>
+      </div>
+      <div class="card-body">
+        <form
+          class="form"
+          #CreateProductForm="ngForm"
+          (ngSumit)="createProduct(newProduct)"
+        >
+          <!-- Product name field -->
+          <div
+            class="form-group"
+            [class.text-danger]="nameControl.invalid && nameControl.touched"
+            [class.text-success]="nameControl.valid"
+          >
+            <label for="name" class="col-form-label">Name</label>
+            <input
+              [(ngModel)]="newProduct.name"
+              type="text"
+              name="name"
+              class="form-control rounded-0"
+              [class.is-invalid]="nameControl.invalid && nameControl.touched"
+              [class.is-valid]="nameControl.valid"
+              required
+              #nameControl="ngModel"
+            />
+            <span
+              class="form-text"
+              *ngIf="nameControl.invalid && nameControl.touched"
+            >
+              Product Name is required
+            </span>
+          </div>
+
+          <!-- Product Price field -->
+          <div
+            class="form-group"
+            [class.text-danger]="priceControl.invalid && priceControl.touched"
+            [class.text-success]="priceControl.valid"
+          >
+            <label for="price" class="col-form-label">Price</label>
+            <input
+              [(ngModel)]="newEvent.price"
+              type="price"
+              name="price"
+              class="form-control rounded-0"
+              [class.is-invalid]="priceControl.invalid && priceControl.touched"
+              [class.is-valid]="priceControl.valid"
+              required
+              #priceControl="ngModel"
+            />
+            <span
+              class="form-text"
+              *ngIf="priceControl.invalid && priceControl.touched"
+            >
+              Product price is required
+            </span>
+          </div>
+
+          <!-- Product Description -->
+          <div
+            class="form-group"
+            [class.text-danger]="
+              descriptionControl.invalid && descriptionControl.touched
+            "
+            [class.text-success]="descriptionControl.valid"
+          >
+            <label for="description" class="col-form-label">Description</label>
+            <input
+              [(ngModel)]="newProduct.description"
+              type="text"
+              name="description"
+              class="form-control rounded-0"
+              [class.is-invalid]="
+                descriptionControl.invalid && descriptionControl.touched
+              "
+              [class.is-valid]="descriptionControl.valid"
+              required
+              #descriptionControl="ngModel"
+            />
+            <span
+              class="form-text"
+              *ngIf="descriptionControl.invalid && descriptionControl.touched"
+            >
+              Product Description is required
+            </span>
+          </div>
+
+          <!-- Product photo path -->
+          <div
+            class="form-group"
+            [class.text-danger]="
+              photoPathControl.invalid && photoPathControl.touched
+            "
+            [class.text-success]="photoPathControl.valid"
+          >
+            <label for="description" class="col-form-label">photoPath</label>
+            <input
+              [(ngModel)]="newProduct.photoPath"
+              type="file"
+              name="photo"
+              class="form-control rounded-0"
+              [class.is-invalid]="
+                photoPathControl.invalid && photoPathControl.touched
+              "
+              [class.is-valid]="photoPathControl.valid"
+              required
+              #photoPathControl="ngModel"
+            />
+            <span
+              class="form-text"
+              *ngIf="photoPathControl.invalid && photoPathControl.touched"
+            >
+              Photo path is required
+            </span>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary float-right"
+            [disabled]="addEventForm.invalid"
+          >
+            Create
+          </button>
+        </form>
+        <br />
+        <div *ngIf="errorMessage" style="padding-top:10px">
+          {{ errorMessage }}
+          <button routerLink="/administration" class="btn btn-primary">
+            Go back home
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
