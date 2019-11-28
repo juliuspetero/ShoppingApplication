@@ -1,4 +1,4 @@
-<div class="card-body mt-0" *ngIf="orders">
+<div class="card-body mt-0" *ngIf="orders.length > 0">
   <h3>All Orders</h3>
   <table class="table table-bordered table-responsive text-center">
     <thead class="thead-light">
@@ -44,7 +44,7 @@
         <td>
           {{ order.paymentStatus }}
           <button
-            (click)="refreshPaymentStatus(order.id)"
+            (click)="updatePaymentStatus(order.id)"
             class="btn btn-outline-dark"
           >
             Refresh
@@ -59,13 +59,25 @@
 </div>
 
 <!-- In case there is no product -->
-<div *ngIf="!orders || orders.length == 0" class="text-info mt-4 text-center">
+<div
+  *ngIf="orders.length == 0 && !errorMessage && !showLoaddingIndicator"
+  class="text-info mt-4 text-center"
+>
   <h5>No one has placed order yet!</h5>
 
-  <a class="btn btn-outline-dark" routerLink="/products">BACK TO DASHBOARD</a>
+  <a class="btn btn-outline-dark" routerLink="administration"
+    >BACK TO DASHBOARD</a
+  >
 </div>
 
 <!-- In case error occur during data retrieval from the API -->
-<div class="text-danger" *ngIf="errorMessage">
+<div class="text-danger text-center" *ngIf="errorMessage">
   {{ errorMessage }}
 </div>
+
+<!-- Add spinner -->
+<div
+  class="spinner"
+  *ngIf="orders.length == 0 && !errorMessage && showLoaddingIndicator"
+></div>
+<div class="spinner" *ngIf="showLoaddingIndicator"></div>

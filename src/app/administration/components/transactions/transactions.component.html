@@ -5,11 +5,12 @@
       <tr>
         <th>ID</th>
         <th>User ID</th>
-        <th>User Email</th>
+        <th>Email</th>
         <th>Request ID</th>
         <th>Created On</th>
         <th>Status</th>
         <th>Amount</th>
+        <th>Phone</th>
         <th>Payment Provider</th>
         <th>Order ID</th>
         <th>Update Status</th>
@@ -24,25 +25,52 @@
         <td>{{ transaction.createdOn | date: "short" }}</td>
         <td>{{ transaction.status }}</td>
         <td>{{ transaction.amount | currency: "UGX " }}</td>
+        <td>{{ transaction.phone }}</td>
         <td>{{ transaction.paymentProvider }}</td>
         <td>{{ transaction.orderId }}</td>
         <th>
-          <button
-            (click)="getTransactionDetails(transaction.id)"
-            class="btn btn-primary"
-          >
-            Refresh
-          </button>
+          <div class="dropdown dropleft">
+            <button
+              type="button"
+              class="btn btn-primary dropdown-toggle"
+              data-toggle="dropdown"
+            >
+              Update With
+            </button>
+            <div class="dropdown-menu">
+              <div class="btn-group-vertical">
+                <button
+                  (click)="updatePaymentStatusByTransactionId(transaction.id)"
+                  class="btn btn-primary"
+                >
+                  Transaction ID
+                </button>
+                <button
+                  (click)="
+                    updatePaymentStatusByRequestId(transaction.requestId)
+                  "
+                  class="btn btn-primary"
+                >
+                  Request ID
+                </button>
+              </div>
+            </div>
+          </div>
         </th>
       </tr>
     </tbody>
   </table>
-  <a [routerLink]="'dashboard'" class="btn btn-primary m-1"
-    >BACK TO DASHBOARD</a
-  >
+  <a [routerLink]="'../'" class="btn btn-primary m-1">BACK TO DASHBOARD</a>
 </div>
 
 <!-- In case error occur during data retrieval from the API -->
 <div class="text-danger" *ngIf="errorMessage">
   {{ errorMessage }}
 </div>
+
+<!-- Add spinner -->
+<div
+  class="spinner"
+  *ngIf="!transactions && !errorMessage && showLoaddingIndicator"
+></div>
+<div class="spinner" *ngIf="showLoaddingIndicator"></div>

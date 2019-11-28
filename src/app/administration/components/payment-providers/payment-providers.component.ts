@@ -8,15 +8,47 @@ import { IPaymentProvider } from "../../models/payment-provider";
   styleUrls: ["./payment-providers.component.css"]
 })
 export class PaymentProvidersComponent implements OnInit {
+  private paymentProviders: IPaymentProvider[] = [];
   private errorMessage: string;
-  private paymentProviders: IPaymentProvider[];
+  private showLoaddingIndicator: boolean = false;
 
-  constructor(private paymentProviderService: PaymentProviderService) {}
+  constructor(private paymentProvidersService: PaymentProviderService) {}
 
   ngOnInit() {
-    this.paymentProviders = this.paymentProviderService.getAllPaymentProviders();
-    if (this.paymentProviders == null) {
-      this.errorMessage = "There is problem retrieving all payment providers";
-    }
+    this.showLoaddingIndicator = true;
+    this.paymentProvidersService.getAllPaymentProviders().subscribe(
+      response => {
+        if (response == null) {
+          this.errorMessage =
+            "There is problem retrieving the payment providers";
+        }
+        this.paymentProviders = response;
+
+        this.showLoaddingIndicator = false;
+      },
+      error => {
+        this.errorMessage = error.message;
+        this.showLoaddingIndicator = false;
+      }
+    );
+  }
+
+  updatePaymentProviders(): void {
+    this.showLoaddingIndicator = true;
+    this.paymentProvidersService.updateAllPaymentProviders().subscribe(
+      response => {
+        if (response == null) {
+          this.errorMessage =
+            "There is problem retrieving the payment providers";
+        }
+        this.ngOnInit();
+        this.paymentProviders = response;
+        this.showLoaddingIndicator = false;
+      },
+      error => {
+        this.errorMessage = error.message;
+        this.showLoaddingIndicator = false;
+      }
+    );
   }
 }

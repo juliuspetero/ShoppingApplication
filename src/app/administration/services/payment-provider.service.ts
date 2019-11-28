@@ -1,47 +1,25 @@
 import { Injectable } from "@angular/core";
 import { IPaymentProvider } from "../models/payment-provider";
 import { SharedService } from "src/app/services/shared.service";
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root"
 })
 export class PaymentProviderService {
-  private paymentProvidersUrl: string = `${SharedService.baseUrl}/paymentproviders`;
+  private paymentProvidersUrl: string = `${SharedService.baseUrl}/transactions/paymentproviders`;
+  private updatePaymentProvidersUrl: string = `${SharedService.baseUrl}/transactions/updatepaymentproviders`;
 
-  constructor(private http: HttpClientModule) {}
+  constructor(private http: HttpClient) {}
 
   //#region  Retrieve an array of payment providers at Xente
-  getAllPaymentProviders(): IPaymentProvider[] {
-    return [
-      {
-        paymentItemId: "AIRTELMONEYUG",
-        name: "Mobile Money",
-        category: "MOBILEMONEY",
-        paymentRegex: "^(2567|07|2562|02)[0|5](\\\\d{7})",
-        paymentRegexStart: "^(2567|07|2562|02)[0|5](\\\\d{0,7})",
-        paymentId: "MOBILEMONEYUG",
-        isDeleted: false,
-        isActive: true,
-        longDescription: "Airtel Money Uganda",
-        shortDescription: "Airtel Money Uganda",
-        imageUri: null
-      },
-      {
-        paymentItemId: "MTNMOBILEMONEYUG",
-        name: "Mobile Money",
-        category: "MOBILEMONEY",
-        paymentRegex: "^(2567|07|2563|03)[7|8](\\\\d{7})",
-        paymentRegexStart: "^(2567|07|2563|03)[7|8](\\\\d{0,7})",
-        paymentId: "MOBILEMONEYUG",
-        isDeleted: false,
-        isActive: true,
-        longDescription: "MTN Money Uganda",
-        shortDescription: "MTN Money Uganda",
-        imageUri: null
-      }
-    ];
+  getAllPaymentProviders(): Observable<IPaymentProvider[]> {
+    return this.http.get<IPaymentProvider[]>(this.paymentProvidersUrl);
   }
-
   //#endregion
+
+  updateAllPaymentProviders(): Observable<IPaymentProvider[]> {
+    return this.http.get<IPaymentProvider[]>(this.updatePaymentProvidersUrl);
+  }
 }

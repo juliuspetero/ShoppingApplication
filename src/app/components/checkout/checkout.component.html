@@ -1,5 +1,5 @@
 <div class="container-fluid" id="checkout">
-  <div class="row" *ngIf="!errorMessage">
+  <div class="row">
     <!-- Display the current state of the cart -->
     <div class="col-md-6 pt-5 h6 header ">
       <div class="row text-center">
@@ -116,8 +116,8 @@
                   class="form-control"
                   [(ngModel)]="orderRequest.applicationMode"
                 >
-                  <option value="production" selected>Production</option>
-                  <option value="sandbox">Sandbox</option>
+                  <option value="sandbox" selected>Sandbox</option>
+                  <option value="production">Production</option>
                 </select>
               </div>
 
@@ -157,7 +157,7 @@
                 </span>
               </div>
 
-              <!-- Phone number field -->
+              <!-- Amount to pay field -->
               <div
                 class="form-group"
                 [class.text-danger]="
@@ -183,6 +183,11 @@
                 />
               </div>
 
+              <!-- Display the error message to the end user -->
+              <span class="form-text text-danger">
+                {{ errorMessage }}
+              </span>
+
               <button
                 type="submit"
                 class="btn btn-primary float-right"
@@ -196,12 +201,6 @@
       </div>
     </div>
   </div>
-  <div *ngIf="errorMessage || statusMessage" class="text-info pt-3">
-    {{ errorMessage }}
-    {{ statusMessage }}
-    <br />
-    <a class="btn btn-outline-dark mt-3" routerLink="/products"
-      >CONTINUE SHOPPING</a
-    >
-  </div>
 </div>
+
+<div class="spinner" *ngIf="showLoaddingIndicator"></div>

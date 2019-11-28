@@ -10,13 +10,43 @@ import { AccountService } from "../../services/account.service";
 export class AccountComponent implements OnInit {
   private accountDetails: IAccountDetails;
   private errorMessage: string;
+  private showLoaddingIndicator: boolean = false;
 
   constructor(private accountService: AccountService) {}
 
   ngOnInit() {
-    this.accountDetails = this.accountService.getAccountDetailsById();
-    if (this.accountDetails == null) {
-      this.errorMessage = "There is problem retrieving the account details";
-    }
+    this.showLoaddingIndicator = true;
+    this.accountService.getAccountDetailsById().subscribe(
+      response => {
+        if (response == null) {
+          this.errorMessage = "There is problem retrieving the account details";
+        }
+        this.accountDetails = response;
+
+        this.showLoaddingIndicator = false;
+      },
+      error => {
+        this.errorMessage = error.message;
+        this.showLoaddingIndicator = false;
+      }
+    );
+  }
+
+  updateAccountDetails(): void {
+    this.showLoaddingIndicator = true;
+    this.accountService.updateAccountDetails().subscribe(
+      response => {
+        if (response == null) {
+          this.errorMessage = "There is problem retrieving the account details";
+        }
+        this.ngOnInit();
+        this.accountDetails = response;
+        this.showLoaddingIndicator = false;
+      },
+      error => {
+        this.errorMessage = error.message;
+        this.showLoaddingIndicator = false;
+      }
+    );
   }
 }

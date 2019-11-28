@@ -1,43 +1,29 @@
 import { Injectable } from "@angular/core";
 import { IAccountDetails } from "../models/account-details";
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { SharedService } from "src/app/services/shared.service";
+import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root"
 })
 export class AccountService {
-  private accountUrl: string = `${SharedService.baseUrl}/account`;
+  private accountUrl: string = `${SharedService.baseUrl}/transactions/accountid`;
+  private updateAccountUrl: string = `${SharedService.baseUrl}/transactions/updateaccount`;
 
-  constructor(private http: HttpClientModule) {}
+  constructor(private http: HttpClient) {}
 
   // Make API call to the backend from the local db
-  getAccountDetailsById(): IAccountDetails {
-    return {
-      createdOn: "2019-08-23T12:42:41.4048704",
-      modifiedOn: "2019-11-18T14:59:30.7658326",
-      accountId: "256784378515",
-      subscriptionId: "BEECF52E552B4F1A83E0904ED098FC62V2",
-      accountType: "PAYMENT_COLLECTION",
-      currencyCode: "UGX",
-      countryCode: "256",
-      accountStatus: "ACTIVE",
-      name: "Demo05",
-      shortDescription: "Demo",
-      longDescription: "Demo",
-      alertLevel: "ERRORS",
-      alertChannel: "EMAIL",
-      alertEmailAddress: "someone@gmail.com",
-      alertPhoneNumber: "256784378515",
-      callBackUri:
-        "https://democallback.free.beeceptor.com/api/xente/testcallback",
-      balance: 0.0,
-      accountPackage: "BUSINESS"
-    };
+  getAccountDetailsById(): Observable<IAccountDetails> {
+    return this.http.get<IAccountDetails>(
+      `${this.accountUrl}/${SharedService.accountId}`
+    );
   }
 
-  // Make API call to Xente Payment API
-  updateAccountDetails() {
-    // Code here
+  // Make API call to Xente Payment API to update the current account standing
+  updateAccountDetails(): Observable<IAccountDetails> {
+    return this.http.get<IAccountDetails>(
+      `${this.updateAccountUrl}/${SharedService.accountId}`
+    );
   }
 }

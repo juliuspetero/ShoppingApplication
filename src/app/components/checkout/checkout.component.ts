@@ -4,7 +4,14 @@ import { IProduct } from "src/app/models/product";
 import { IOrder } from "src/app/models/order";
 import { SharedService } from "src/app/services/shared.service";
 import { OrderService } from "src/app/services/order.service";
-import { Router } from "@angular/router";
+import {
+  Router,
+  NavigationStart,
+  NavigationEnd,
+  NavigationError,
+  NavigationCancel,
+  Event
+} from "@angular/router";
 
 @Component({
   selector: "app-checkout",
@@ -14,25 +21,41 @@ import { Router } from "@angular/router";
 export class CheckoutComponent implements OnInit {
   private productsAddedToCart: IProduct[];
   private errorMessage: string;
-  private orderRequest: IOrder = {} as IOrder;
-
-  private statusMessage: string;
+  private orderRequest: IOrder = {
+    phone: this.sharedService.getUserDetails().phone,
+    email: this.sharedService.getUserDetails().email
+  } as IOrder;
   private totalCost: number;
   private cartItemCount: number;
+  private showLoaddingIndicator: boolean = true;
 
   constructor(
     private productService: ProductService,
     private orderService: OrderService,
     private sharedService: SharedService,
     private router: Router
-  ) {}
+  ) {
+    this.router.events.subscribe((routerEvent: Event) => {
+      if (routerEvent instanceof NavigationStart) {
+        this.showLoaddingIndicator = true;
+      }
+
+      if (
+        routerEvent instanceof NavigationEnd ||
+        routerEvent instanceof NavigationError ||
+        routerEvent instanceof NavigationCancel
+      ) {
+        this.showLoaddingIndicator = false;
+      }
+    });
+  }
 
   ngOnInit() {
     this.productsAddedToCart = this.productService.getProductFromCart();
     this.totalCost = this.productService.calculateTotalCost();
     this.cartItemCount = this.productsAddedToCart.length;
     this.sharedService.updateCartCount(this.cartItemCount);
-    this.orderRequest.applicationMode = "production";
+    this.orderRequest.applicationMode = "sandbox";
 
     if (this.productsAddedToCart.length == 0) {
       this.errorMessage = "You have not added any product to your cart yet";
@@ -40,18 +63,28 @@ export class CheckoutComponent implements OnInit {
   }
 
   checkout(request: IOrder): void {
-    request.oderProducts = this.productsAddedToCart;
-    request.totalAmount = this.totalCost;
-    this.router.navigate(["/orders"]);
-
-    // this.orderService.placeOrder(request).subscribe(
-    //   response => {
-    //     this.router.navigate(["/orders"]);
-    //     this.statusMessage = response;
-    //   },
-    //   error => {
-    //     this.errorMessage = error.message;
-    //   }
-    // );
+    this.showLoaddingIndicator = true;
+    if (
+      request.phone.startsWith("25678") ||
+      request.phone.startsWith("25677") ||
+      request.phone.startsWith("25675") ||
+      request.phone.startsWith("25670")
+    ) {
+      request.orderProducts = this.productsAddedToCart;
+      request.totalAmount = this.totalCost;
+      this.orderService.placeOrder(request).subscribe(
+        response => {
+          // console.log(response);
+          this.router.navigate(["/orders"]);
+        },
+        error => {
+          this.errorMessage = error.message;
+          this.showLoaddingIndicator = false;
+        }
+      );
+    } else {
+      this.errorMessage = "Enter a supported phone number";
+      this.showLoaddingIndicator = false;
+    }
   }
 }

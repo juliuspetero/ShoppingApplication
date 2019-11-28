@@ -51,7 +51,6 @@ export class ProductService {
   }
 
   getProductFromCart(): IProduct[] {
-    // This will return null when products have not been added to cart
     return JSON.parse(localStorage.getItem("cart"));
   }
 

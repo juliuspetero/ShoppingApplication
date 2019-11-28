@@ -7,10 +7,9 @@ export interface IOrder {
   applicationMode: string;
   phone: string;
   email: string;
-  // This is retrieved from the cart
-  oderProducts: IProduct[];
+  orderProducts: IProduct[];
   deliveryAddress: string;
-  deliveryStatus?: string;
-  placedOn?: string;
-  paymentStatus?: string;
+  deliveryStatus: string;
+  placedOn: string;
+  paymentStatus: string;
 }

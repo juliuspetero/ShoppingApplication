@@ -1,4 +1,4 @@
-<div class="card-body mt-0" *ngIf="userOrders">
+<div class="card-body mt-5" *ngIf="userOrders.length > 0">
   <h3>All Orders</h3>
   <table class="table table-bordered table-responsive text-center">
     <thead class="thead-light">
@@ -6,7 +6,7 @@
         <th>Order ID</th>
         <th>Date of Placement</th>
         <th>Total Amount Paid</th>
-        <th>Payment Mode</th>
+        <th>Application Mode</th>
         <th>Products Ordered</th>
         <th>Delivery Status</th>
         <th>Payment Status</th>
@@ -17,7 +17,7 @@
         <td>{{ order.id }}</td>
         <td>{{ order.placedOn | date: "short" }}</td>
         <td>{{ order.totalAmount | currency: "UGX " }}</td>
-        <td>{{ order.paymentMode | titlecase }}</td>
+        <td>{{ order.applicationMode | titlecase }}</td>
         <td class="products">
           <table class="table table-bordered table-responsive">
             <thead class="thead-light">
@@ -29,9 +29,9 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let product of order.oderProducts">
+              <tr *ngFor="let product of order.orderProducts">
                 <td>{{ product.name }}</td>
-                <td>{{ product.price }}</td>
+                <td>{{ product.price | currency: "UGX " }}</td>
                 <td>{{ product.quantity }}</td>
                 <td>
                   {{ product.price * product.quantity | currency: "UGX " }}
@@ -98,19 +98,31 @@
   <a routerLink="/products" class="btn btn-primary m-1">CONTINUE SHOPPING</a>
 </div>
 
-<!-- In case there is no product -->
-<div
-  *ngIf="!userOrders || userOrders.length == 0"
-  class="text-info mt-4 text-center"
->
-  <h5>You have placed no orders yet!</h5>
-  <p>
-    All your orders will be saved here for you to access their state anytime.
-  </p>
-  <a class="btn btn-outline-dark" routerLink="/products">GO TO SHOPPING LIST</a>
+<!-- ERROR-->
+
+<div class="mt-6 text-center" id="invalid">
+  <div
+    *ngIf="userOrders == 0 && !errorMessage && !showLoaddingIndicator"
+    class="text-info mt-4 text-center"
+  >
+    <h5>You have placed no orders yet!</h5>
+    <p>
+      All your orders will be saved here for you to access their state anytime.
+    </p>
+    <a class="btn btn-outline-dark" routerLink="/products"
+      >GO TO SHOPPING LIST</a
+    >
+  </div>
 </div>
 
 <!-- In case error occur during data retrieval from the API -->
-<div class="text-danger" *ngIf="errorMessage">
+<div class="text-danger text-center" *ngIf="errorMessage">
   {{ errorMessage }}
 </div>
+
+<!-- Add spinner -->
+<div
+  class="spinner"
+  *ngIf="!userOrders && !errorMessage && showLoaddingIndicator"
+></div>
+<div class="spinner" *ngIf="showLoaddingIndicator"></div>

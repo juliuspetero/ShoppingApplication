@@ -29,10 +29,7 @@
   <a routerLink="/administration" class="btn btn-primary m-1"
     >BACK TO DASHBOARD</a
   >
-  <button
-    (click)="updateAccountDetails(accountDetails.id)"
-    class="btn btn-primary"
-  >
+  <button (click)="updateAccountDetails()" class="btn btn-primary">
     Update Account Details
   </button>
 </div>
@@ -41,3 +38,10 @@
 <div class="text-danger" *ngIf="errorMessage">
   {{ errorMessage }}
 </div>
+
+<!-- Add spinner -->
+<div
+  class="spinner"
+  *ngIf="!accountDetailss && !errorMessage && showLoaddingIndicator"
+></div>
+<div class="spinner" *ngIf="showLoaddingIndicator"></div>

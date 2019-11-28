@@ -19,7 +19,7 @@ import { CheckoutComponent } from "./components/checkout/checkout.component";
 import { OrdersComponent } from "./components/orders/orders.component";
 import { OrderService } from "./services/order.service";
 import { AdministrationModule } from "./administration/administration.module";
-import { AdministrationComponent } from "./administration/administration.component";
+import { AdministrationGuard } from "./guards/administration.guard";
 
 @NgModule({
   declarations: [
@@ -45,6 +45,7 @@ import { AdministrationComponent } from "./administration/administration.compone
     AuthenticationGuard,
     SharedService,
     OrderService,
+    AdministrationGuard,
     // Using interceptors
     {
       provide: HTTP_INTERCEPTORS,

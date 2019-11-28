@@ -1,4 +1,4 @@
-<div class="card-body mt-0" *ngIf="paymentProviders">
+<div class="card-body mt-0" *ngIf="paymentProviders.length > 0">
   <h3>All Payment Providers</h3>
   <table class="table table-bordered table-responsive text-center">
     <thead class="thead-light">
@@ -34,22 +34,24 @@
 
 <!-- In case there is no product -->
 <div
-  *ngIf="!paymentProviders || paymentProviders.length == 0"
+  *ngIf="
+    paymentProviders.length == 0 && !errorMessage && !showLoaddingIndicator
+  "
   class="text-info mt-4 text-center"
 >
   <h5>There are no payment providers!</h5>
   <p>
     Please update payment providers list
   </p>
-  <a [routerLink]="'dashboard'" class="btn btn-primary m-1"
-    >BACK TO DASHBOARD</a
-  >
+  <a [routerLink]="'../'" class="btn btn-primary m-1">BACK TO DASHBOARD</a>
   <button (click)="updatePaymentProviders()" class="btn btn-outline-dark">
     UPDATE PAYMENT PROVIDERS
   </button>
 </div>
 
-<!-- In case error occur during data retrieval from the API -->
-<div class="text-danger" *ngIf="errorMessage">
-  {{ errorMessage }}
-</div>
+<!-- Add spinner -->
+<div
+  class="spinner"
+  *ngIf="paymentProviders.length == 0 && !errorMessage && showLoaddingIndicator"
+></div>
+<div class="spinner" *ngIf="showLoaddingIndicator"></div>

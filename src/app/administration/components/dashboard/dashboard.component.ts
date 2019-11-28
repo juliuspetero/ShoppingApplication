@@ -13,19 +13,18 @@ import { UserService } from "../../services/user.service";
 })
 export class DashboardComponent implements OnInit {
   // Orders
-  private orders: IOrder[];
   private numberOfOrders: number;
 
   // Users
-  private users: IUser[];
   private numberOfUsers: number;
 
   // Transactions
-  private transactions: ITransaction[];
   private numberOfTransactions: number;
+  private numberOfSuccessfulTransactions: number;
+  private numberOfFailedTransactions: number;
+  private numberOfPendingTransactions: number;
 
   // New Users
-  private newUsers: IUser[];
   private numberOfNewUsers: number;
 
   // Sales
@@ -39,45 +38,63 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.calculateTotalOrders();
-    this.calculateTotalTransactions();
-    this.calculateTotalUsers();
-    this.calculateTotalNewUsers();
+    this.calculateTotalNumberOfOrders();
+    this.calculateTotalNumberOfTransactions();
+    this.calculateTotalNumberOfUsers();
+    this.calculateTotalNumberOfTransactionsStatus();
   }
 
-  calculateTotalTransactions(): void {
-    this.transactions = this.transactionService.getAllTransactions();
-    if (this.transactions == null) {
-      this.errorMessage = "Failed to get transactions from the API";
-    }
-
-    this.numberOfTransactions = this.transactions.length;
+  calculateTotalNumberOfTransactions(): void {
+    this.transactionService.getNumberOfTransactions().subscribe(
+      response => {
+        this.numberOfTransactions = response.count;
+      },
+      error => {
+        this.errorMessage = error.message;
+      }
+    );
   }
 
-  calculateTotalOrders(): void {
-    this.orders = this.orderService.getAllOrders();
-    if (this.orders == null) {
-      this.errorMessage = "No one has place place order yet!";
-    }
-    this.numberOfOrders = this.orders.length;
+  calculateTotalNumberOfTransactionsStatus(): void {
+    this.transactionService.getAllTransactions().subscribe(
+      response => {
+        this.numberOfSuccessfulTransactions = response.filter(
+          t => t.status == "COMMITTED"
+        ).length;
+        this.numberOfFailedTransactions = response.filter(
+          t => t.status == "FAILED"
+        ).length;
+        this.numberOfPendingTransactions = response.filter(
+          t => t.status == "PROCESSING"
+        ).length;
+      },
+      error => {
+        this.errorMessage = error.message;
+      }
+    );
   }
 
-  calculateTotalUsers(): void {
-    this.users = this.userService.getAllUsers();
-    if (this.users == null) {
-      this.errorMessage = "No user to display!";
-    }
-
-    this.numberOfUsers = this.users.length;
+  calculateTotalNumberOfOrders(): void {
+    this.orderService.getNumberofOrders().subscribe(
+      response => {
+        this.numberOfOrders = response.count;
+      },
+      error => {
+        console.log(error);
+        this.errorMessage = error.message;
+      }
+    );
   }
-  calculateTotalSales(): void {}
 
-  calculateTotalNewUsers(): void {
-    this.newUsers = this.userService.getAllUsers();
-    if (this.newUsers == null) {
-      this.errorMessage = "No user to display!";
-    }
-
-    this.numberOfNewUsers = this.newUsers.length;
+  calculateTotalNumberOfUsers(): void {
+    this.userService.getNumberOfUsers().subscribe(
+      response => {
+        this.numberOfUsers = response.count;
+        this.numberOfNewUsers = response.count;
+      },
+      error => {
+        this.errorMessage = error.message;
+      }
+    );
   }
 }

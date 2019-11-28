@@ -8,6 +8,8 @@ import { RegisterComponent } from "./components/register/register.component";
 import { CheckoutComponent } from "./components/checkout/checkout.component";
 import { OrdersComponent } from "./components/orders/orders.component";
 import { AdministrationRoutingModule } from "./administration/administration-routing.module";
+import { AuthenticationGuard } from "./guards/authentication.guard";
+import { AdministrationGuard } from "./guards/administration.guard";
 
 const routes: Routes = [
   { path: "", component: ProductComponent },
@@ -15,9 +17,21 @@ const routes: Routes = [
   { path: "login", component: LoginComponent },
   { path: "register", component: RegisterComponent },
   { path: "details/:id", component: ProductDetailsComponent },
-  { path: "cart", component: CartComponent },
-  { path: "checkout", component: CheckoutComponent },
-  { path: "orders", component: OrdersComponent },
+  {
+    path: "cart",
+    component: CartComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "checkout",
+    component: CheckoutComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: "orders",
+    component: OrdersComponent,
+    canActivate: [AuthenticationGuard]
+  },
   {
     path: "administration",
     loadChildren: () =>

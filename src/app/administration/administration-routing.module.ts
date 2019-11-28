@@ -14,13 +14,18 @@ import { ProductsComponent } from "./components/products/products.component";
 import { ProfileComponent } from "./components/profile/profile.component";
 import { UsersComponent } from "./components/users/users.component";
 import { RolesComponent } from "./components/roles/roles.component";
+import { AdministrationGuard } from "../guards/administration.guard";
 
 const administrationRoutes: Routes = [
   {
     path: "administration",
     component: AdministrationComponent,
+    canActivate: [AdministrationGuard],
     children: [
-      { path: "products", component: ProductsComponent },
+      {
+        path: "products",
+        component: ProductsComponent
+      },
       { path: "create", component: CreateComponent },
       { path: "paymentproviders", component: PaymentProvidersComponent },
       { path: "transactions", component: TransactionsComponent },

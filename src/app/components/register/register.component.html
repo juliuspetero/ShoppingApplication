@@ -49,63 +49,181 @@
             <div class="col-lg-4 mx-auto">
               <h2 class="text-center mb-4">Register</h2>
               <div class="auto-form-wrapper">
-                <form action="#">
-                  <div class="form-group">
+                <form
+                  #registrationForm="ngForm"
+                  (ngSubmit)="registerUser(newUser)"
+                >
+                  <!-- Email address field -->
+                  <div
+                    class="form-group"
+                    [class.text-danger]="
+                      emailControl.invalid && emailControl.touched
+                    "
+                    [class.text-success]="emailControl.valid"
+                  >
                     <div class="input-group">
                       <input
-                        type="text"
                         class="form-control"
-                        placeholder="Username"
+                        placeholder="Email"
+                        name="email"
+                        [(ngModel)]="newUser.email"
+                        type="email"
+                        name="email"
+                        [class.is-invalid]="
+                          emailControl.invalid && emailControl.touched
+                        "
+                        [class.is-valid]="emailControl.valid"
+                        required
+                        #emailControl="ngModel"
                       />
                       <div class="input-group-append">
                         <span class="input-group-text">
                           <i class="mdi mdi-check-circle-outline"></i>
                         </span>
                       </div>
+                      <!-- Display errors to the end user -->
+                      <span
+                        class="form-text"
+                        *ngIf="emailControl.invalid && emailControl.touched"
+                      >
+                        Valid email is required
+                      </span>
                     </div>
                   </div>
-                  <div class="form-group">
+
+                  <!-- Phone Number field -->
+                  <div
+                    class="form-group"
+                    [class.text-danger]="
+                      phoneControl.invalid && phoneControl.touched
+                    "
+                    [class.text-success]="emailControl.valid"
+                  >
                     <div class="input-group">
                       <input
+                        class="form-control"
+                        placeholder="Phone Number"
+                        name="phone"
+                        [(ngModel)]="newUser.phone"
+                        type="tel"
+                        name="phone"
+                        [class.is-invalid]="
+                          phoneControl.invalid && phoneControl.touched
+                        "
+                        [class.is-valid]="phoneControl.valid"
+                        required
+                        #phoneControl="ngModel"
+                      />
+                      <div class="input-group-append">
+                        <span class="input-group-text">
+                          <i class="mdi mdi-check-circle-outline"></i>
+                        </span>
+                      </div>
+                      <!-- Display errors to the end user -->
+                      <span
+                        class="form-text"
+                        *ngIf="phoneControl.invalid && phoneControl.touched"
+                      >
+                        Valid phone number is required
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Password field -->
+                  <div
+                    class="form-group"
+                    [class.text-danger]="
+                      passwordControl.invalid && passwordControl.touched
+                    "
+                    [class.text-success]="passwordControl.valid"
+                  >
+                    <div class="input-group">
+                      <input
+                        class="form-control"
+                        placeholder="password"
+                        name="password"
+                        [(ngModel)]="newUser.password"
                         type="password"
-                        class="form-control"
-                        placeholder="Password"
+                        name="password"
+                        [class.is-invalid]="
+                          passwordControl.invalid && passwordControl.touched
+                        "
+                        [class.is-valid]="passwordControl.valid"
+                        required
+                        #passwordControl="ngModel"
                       />
                       <div class="input-group-append">
                         <span class="input-group-text">
                           <i class="mdi mdi-check-circle-outline"></i>
                         </span>
                       </div>
+                      <!-- Display errors to the end user -->
+                      <span
+                        class="form-text"
+                        *ngIf="
+                          passwordControl.invalid && passwordControl.touched
+                        "
+                      >
+                        Valid password is required
+                      </span>
                     </div>
                   </div>
-                  <div class="form-group">
+
+                  <!-- Confirm password -->
+                  <div
+                    class="form-group"
+                    [class.text-danger]="
+                      confirmPasswordControl.invalid &&
+                      confirmPasswordControl.touched
+                    "
+                    [class.text-success]="confirmPasswordControl.valid"
+                  >
                     <div class="input-group">
                       <input
-                        type="password"
                         class="form-control"
-                        placeholder="Confirm Password"
+                        placeholder="confirmPassword"
+                        name="confirmPassword"
+                        [(ngModel)]="newUser.confirmPassword"
+                        type="password"
+                        name="confirmPassword"
+                        [class.is-invalid]="
+                          confirmPasswordControl.invalid &&
+                          confirmPasswordControl.touched
+                        "
+                        [class.is-valid]="confirmPasswordControl.valid"
+                        required
+                        #confirmPasswordControl="ngModel"
                       />
                       <div class="input-group-append">
                         <span class="input-group-text">
                           <i class="mdi mdi-check-circle-outline"></i>
                         </span>
                       </div>
+                      <!-- Display errors to the end user -->
+                      <span
+                        class="form-text"
+                        *ngIf="
+                          confirmPasswordControl.invalid &&
+                          confirmPasswordControl.touched
+                        "
+                      >
+                        Confirm Password
+                      </span>
                     </div>
+
+                    <!-- Display the registration errors to the user -->
+                    <span class="form-text text-danger" *ngIf="errorMessage">
+                      {{ errorMessage }}
+                    </span>
                   </div>
-                  <!-- <div class="form-group d-flex justify-content-center">
-                    <div class="form-check form-check-flat mt-0">
-                      <label class="form-check-label">
-                        <input
-                          type="checkbox"
-                          class="form-check-input"
-                          checked
-                        />
-                        I agree to the terms
-                      </label>
-                    </div>
-                  </div> -->
+
+                  <!-- Submit Button field -->
                   <div class="form-group">
-                    <button class="btn btn-primary submit-btn btn-block">
+                    <button
+                      class="btn btn-primary submit-btn btn-block"
+                      type="submit"
+                      [disabled]="registrationForm.invalid"
+                    >
                       Register
                     </button>
                   </div>
@@ -113,7 +231,9 @@
                     <span class="text-small font-weight-semibold"
                       >Already have and account ?</span
                     >
-                    <a href="login.html" class="text-black text-small">Login</a>
+                    <a routerLink="/login" class="text-black text-small"
+                      >Login</a
+                    >
                   </div>
                 </form>
               </div>

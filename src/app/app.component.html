@@ -47,26 +47,22 @@
       </li>
     </ul>
 
-    <!-- Only accessible by logged in users -->
     <ul class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link" [routerLink]="'cart'" routerLinkActive="active">
           <i class="fa fa-shopping-cart"></i> Cart {{ cartItemCount }}
         </a>
       </li>
-      <!-- *ngIf="authService.isLoggedIn()" -->
-      <li class="nav-item">
-        <a
-          class="nav-link"
-          style="cursor:pointer"
-          (click)="!authService.logoutUser()"
-        >
-          Logout {{ "Name of the current User" }}
+      <li class="nav-item" *ngIf="authService.isLoggedIn()">
+        <a class="nav-link" style="cursor:pointer" (click)="logoutUser()">
+          Logout {{ sharedService.getUserDetails().email }}
         </a>
       </li>
     </ul>
   </div>
 </nav>
+
+<div class="spinner" *ngIf="showLoaddingIndicator"></div>
 
 <!-- Pages are injected here -->
 <div id="router-outlet">

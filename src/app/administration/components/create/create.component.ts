@@ -12,4 +12,8 @@ export class CreateComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
+
+  createProduct(product: IProduct) {
+    console.log(product);
+  }
 }

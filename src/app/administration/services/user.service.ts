@@ -1,27 +1,21 @@
 import { Injectable } from "@angular/core";
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { IUser } from "src/app/administration/models/user";
+import { Observable } from "rxjs";
+import { SharedService } from "src/app/services/shared.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class UserService {
-  constructor(private http: HttpClientModule) {}
+  private usersUrl: string = `${SharedService.baseUrl}/users`;
+  constructor(private http: HttpClient) {}
 
-  getAllUsers(): IUser[] {
-    return [
-      {
-        id: "1",
-        email: "john@gmail.com",
-        phone: "256788282",
-        role: "admin"
-      },
-      {
-        id: "2",
-        email: "meddie@gmail.com",
-        phone: "256788282",
-        role: "user"
-      }
-    ];
+  getNumberOfUsers(): Observable<any> {
+    return this.http.get<any>(`${this.usersUrl}/count`);
+  }
+
+  getAllUsers(): Observable<IUser[]> {
+    return this.http.get<IUser[]>(this.usersUrl);
   }
 }

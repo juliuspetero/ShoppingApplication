@@ -7,8 +7,9 @@
       <div class="card-body">
         <form
           class="form"
-          #CreateProductForm="ngForm"
-          (ngSumit)="createProduct(newProduct)"
+          #createProductForm="ngForm"
+          (ngSubmit)="createProduct(newProduct)"
+          enctype="multipart/form-data"
         >
           <!-- Product name field -->
           <div
@@ -43,7 +44,7 @@
           >
             <label for="price" class="col-form-label">Price</label>
             <input
-              [(ngModel)]="newEvent.price"
+              [(ngModel)]="newProduct.price"
               type="price"
               name="price"
               class="form-control rounded-0"
@@ -101,6 +102,7 @@
             <input
               [(ngModel)]="newProduct.photoPath"
               type="file"
+              class="custom-file-input"
               name="photo"
               class="form-control rounded-0"
               [class.is-invalid]="
@@ -121,7 +123,7 @@
           <button
             type="submit"
             class="btn btn-primary float-right"
-            [disabled]="addEventForm.invalid"
+            [disabled]="createProductForm.invalid"
           >
             Create
           </button>

@@ -1,47 +1,41 @@
 import { Injectable } from "@angular/core";
 import { SharedService } from "src/app/services/shared.service";
 import { ITransaction } from "../models/transaction";
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root"
 })
 export class TransactionService {
-  private transactionUrl: string = `${SharedService.baseUrl}/transaction`;
+  private transactionUrl: string = `${SharedService.baseUrl}/transactions`;
 
-  constructor(private http: HttpClientModule) {}
+  constructor(private http: HttpClient) {}
 
   //#region  Get transactions
-  getAllTransactions(): ITransaction[] {
-    return [
-      {
-        id: "1",
-        userId: "user1",
-        requestId: "req1",
-        createdOn: "2019-08-23T12:42:41.4048704",
-        status: "PROCESSING",
-        batchId: "Batch1",
-        amount: 5000,
-        paymentProvider: "MTN",
-        message: "Payment for order1",
-        userEmail: "john@gmail.com",
-        orderId: "order1"
-      },
-      {
-        id: "2",
-        userId: "user2",
-        requestId: "req2",
-        createdOn: "2019-08-20T12:42:41.4048704",
-        status: "COMMITTED",
-        batchId: "Batch1",
-        amount: 8000,
-        paymentProvider: "AIRTEL",
-        message: "Payment for order2",
-        userEmail: "fred@gmail.com",
-        orderId: "order2"
-      }
-    ];
+  getAllTransactions(): Observable<ITransaction[]> {
+    return this.http.get<ITransaction[]>(this.transactionUrl);
+  }
+  //#endregion
+
+  getTransactionsDetailsByTransactionId(
+    transactionId: string
+  ): Observable<ITransaction> {
+    return this.http.get<ITransaction>(
+      `${this.transactionUrl}/transactionid/${transactionId}`
+    );
   }
 
-  //#endregion
+  getTransactionsDetailsByRequestId(
+    requestId: string
+  ): Observable<ITransaction> {
+    return this.http.get<ITransaction>(
+      `${this.transactionUrl}/requestid/${requestId}`
+    );
+  }
+
+  // Get the number of transactions
+  getNumberOfTransactions(): Observable<any> {
+    return this.http.get<any>(`${this.transactionUrl}/count`);
+  }
 }
